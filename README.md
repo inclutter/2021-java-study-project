@@ -49,3 +49,5 @@
   - default
     - 동일 패키지로 묶인 클래스 내에서만 인스턴스 생성을 허용한다.
 
+<img src='images/img.png'>
+
