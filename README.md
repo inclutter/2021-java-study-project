@@ -1,5 +1,12 @@
 # 2021-java-study-project
-2021 repository for java study
+## ◎ Java study project list
+
+1. Java Wrapper class
+2. Java package naming
+3. Access-level modifiers
+4. Constants
+
+
 
 ## 01 Java wrapper class
 
@@ -35,13 +42,15 @@
 
 ### • 클래스 정의 대상의 pulbic과 default 선언이 갖는 의미
 
-`public class AAA { // 클래스의 pulbic 선언`
+```java
+public class AAA { // 클래스의 pulbic 선언`
+}
+```
 
-`}`
-
-`class ZZZ { // 클래스의 default 선언`
-
-`}`
+```java
+class ZZZ { // 클래스의 default 선언`
+}
+```
 
 - 정리하면, 클래스 정의에 대한 public과 default 선언이 갖는 의미는 다음과 같다.
   - public
@@ -51,3 +60,24 @@
 
 <img src='images/img.png'>
 
+## 04 Constants(상수)
+
+변수를 선언할 때 그 앞에 final이라는 선언을 추가하면 그 변수는 '상수'가 된다. 그리고 다음 두가지 특징을 지니게 된다.
+
+- 값을 딱 한 번만 할당할 수 있다.
+- 한 번 할당된 값은 변경이 불가능하다.
+
+```java
+public class Constants {
+    public static void main(String[] args) {
+        final int MAX_SIZE = 100;
+        final char CONST_CHAR = '상';
+        final int CONST_ASSIGNED;
+
+        CONST_ASSIGNED = 12;
+        System.out.println("상수1 : " + MAX_SIZE);
+        System.out.println("상수2 : " + CONST_CHAR);
+        System.out.println("상수3 : " + CONST_ASSIGNED);
+    }
+}
+```
