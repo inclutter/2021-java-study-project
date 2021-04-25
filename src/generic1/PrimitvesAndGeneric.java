@@ -1,4 +1,4 @@
-package generic;
+package generic1;
 
 /**
  * Primitive 자료형은 기본(원시) 자료형이라고 이해하면 편하고,

@@ -1,4 +1,4 @@
-package generic;
+package generic1;
 
 class Apple {
     @Override

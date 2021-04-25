@@ -1,4 +1,4 @@
-package generic;
+package generic1;
 
 public class MultiTypeParam {
     public static void main(String[] args) {
