@@ -8,15 +8,15 @@
 
 
 
-## 01 Java wrapper class
+### 01 Java wrapper class
 
 <img src='images/스크린샷 2021-04-24 오후 11.34.05.png'>
 
-## 02 Java package naming
+### 02 Java package naming
 
 <img src='images/스크린샷 2021-04-25 오후 3.16.47.png'>
 
-## 03 접근 수준 지시자(Access-level Modifiers)
+### 03 접근 수준 지시자(Access-level Modifiers)
 
 - pulbic
   - 어디서든 접근이 가능하다.
@@ -40,7 +40,7 @@
         - private
         - default
 
-### • 클래스 정의 대상의 pulbic과 default 선언이 갖는 의미
+#### • 클래스 정의 대상의 pulbic과 default 선언이 갖는 의미
 
 ```java
 public class AAA { // 클래스의 pulbic 선언`
@@ -60,7 +60,7 @@ class ZZZ { // 클래스의 default 선언`
 
 <img src='images/img.png'>
 
-## 04 Constants(상수)
+### 04 Constants(상수)
 
 변수를 선언할 때 그 앞에 final이라는 선언을 추가하면 그 변수는 '상수'가 된다. 그리고 다음 두가지 특징을 지니게 된다.
 
