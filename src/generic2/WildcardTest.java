@@ -34,6 +34,7 @@ class Unboxer3 {
 
     public static void setBox(Box5<? super Integer> box5, int n) {
         box5.setOb(n);
+        Integer t = box5.getOb();
         System.out.println(box5.getOb());
     }
 }
