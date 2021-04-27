@@ -32,7 +32,7 @@ class BoxHandler {
 
         Toy n = new Toy();
         /**
-         * 와일드 카드 상속(? extends Toy)의 경우 다음과 같이 setting이 안됨
+         * 와일드 카드 상속(? extends Toy)의 경우 다음과 같이 to set이 안됨
          * TODO : 주석 제거하면 컴파일 에러 발생하므로 에러 확인 원할 경우 주석 해제
          */
         // box.setOb(n);
