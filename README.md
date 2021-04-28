@@ -5,6 +5,7 @@
 2. Java package naming
 3. Access-level modifiers
 4. Constants
+5. Wildcard
 
 
 
@@ -81,3 +82,6 @@ public class Constants {
     }
 }
 ```
+
+### 05 wildcard(만능패)
+
