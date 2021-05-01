@@ -2,7 +2,9 @@ package generic2;
 
 public class BoundedWildcardUsage {
     public static void main(String[] args) {
-
+        Box1<Toy> box = new Box1<>();
+        BoxHandler.inBox(box, new Toy());
+        BoxHandler.outBox(box);
     }
 }
 
@@ -26,7 +28,7 @@ class Toy {
 }
 
 class BoxHandler {
-    public static void outBox(Box1<? extends Toy> box) {
+    public static void outBox(Box1<? extends Toy> box) { // 상자에서 꺼내기
         Toy t = box.getOb();
         System.out.println(t);
 
@@ -39,6 +41,6 @@ class BoxHandler {
     }
 
     public static void inBox(Box1<Toy> box, Toy n) {
-        box.setOb(n);
+        box.setOb(n); // 상자에 넣기
     }
 }
