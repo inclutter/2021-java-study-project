@@ -7,6 +7,7 @@
 4. Constants
 5. Wildcard
 6. Extension
+7. Static variable
 
 
 
@@ -292,7 +293,204 @@ class Toy4 {
 
 ### 06 Extension(상속)
 
+#### • 상속에 대한 매우 치명적인 오해
+
+상속은 코드의 재활용을 위한 문법이다 ← 해당 내용은 상속에 대한 매우 치명적인 오해이다.
+
+상속은 코드의 재활용을 목적으로 사용하는 문법이 아니다.
+
+만약에 재활용을 목적으로 상속을 사용할 경우 무의미하게 코드가 복잡해지고, 기대와 달리 코드를 재활용하지 못하는 상황을 쉽게 경험하게 될 것이다.
+
+코드의 재활용은 프로그래머라면 누구나 바라는 일이다. 그러나 이를 목적으로 20년 넘게 한문적으로 연구가 진행 중이다.
+
+그러나 전자부품이나 기계부품처럼 일부를 뜯어서 다른 장치에 사용하는 것은 아직은 요원한 일이며,
+
+소프트웨어의 특성상 이러한 형태의 재활용이 아닌 다른 형태의 재활용이 시도되고 연구되고 있다.
+
+
+
 #### • 상속이란?
 
-연관된 일련의 클래스들에 대해 콩통적인 규약을 정의할 수있다.
+연관된 일련의 클래스들에 대해 공통적인 규약을 정의할 수있다.
 
+
+
+#### • 상속의 가장 기본적인 특성
+
+상속을 단순하게 설명하면 기존에 정의된 클래스에 메소드와 변수를 추가하여 새로운 클래스를 정의하는 것이 상속이다.
+
+다음과 같이 상속(extends)이란 단어(extension)의 명상적 번역은 다음과 같이 뻗음, 뻗침으로 번역할 수 있다.
+
+상속이라고 하지만 실은 가지가 뻗치든 뻗치는 코드를 의미한다.
+
+<img src='images/스크린샷 2021-05-02 오후 7.59.12.png'>
+
+그럼 예를 들어서 다음의 클래스가 정의되어 있다고 가정해보자.
+
+```java
+class Man {
+	String name;
+	public void tellYourName() {
+		System.out.println("My name is" + name);
+	}
+}
+```
+
+이때 위의 클래스를 상속하여(물려 받아서) 다음과 같이 새로운 클래스를 정의할 수 있다. 참고로 키워드의 extends는 상속을 의미하는 키워드이다. 
+
+즉 extends Man은 Man 클래스를 상속한다는 의미이다.
+
+```java
+class BusinessMan extends Man { // Man을 상속하는 BusinessMan
+	String company;
+	String position;
+	public void tellYourInfo() {
+		System.out.println("My company is " + company);
+		System.out.println("My position is " + position);
+		tellYourName(); // Man 클래스를 상속했기 때문에 호출 가능!
+	}
+}
+```
+
+그리고 이렇게 Man 클래스를 상속하는 BusinessMan 클래스의 인스턴스를 생성하면, 다음 형태의 인스턴스가 생성된다.
+
+```java
+BusinessMan man = new BusinessMan();
+
+// 다음 형태의 인스턴스가 생성
+String name; // Man의 멤버 변수
+String companay;
+String position
+void tellYourName() {...} // Man의 멤버
+void tellYourInfo() {...}
+```
+
+#### • 생성자 호출
+
+- 하위 클래스의 인스턴스 생성 시 상위 클래스, 하위 클래스의 생성자 모두 호출된다.
+- 하위 클래스의 인스턴스 생성 시 상위 클래스의 생성자가 먼저 호출된다.
+
+아래 코드에서는 두 클래스의 적절한 생성자 정의 모델을 보이고 있다.
+
+**결론은 간단하다. 상속 관계에 있을지라도 인스턴스 변수는 각 클래스의 생성자를 통해서 초기화해야 한다는 것이다.**
+
+```java
+package extends_examples1;
+
+public class MyBusinessMan2 {
+    public static void main(String[] args) {
+        BusinessMan businessMan = new BusinessMan("YOON", "Hybrid ELD", "Staff Eng");
+        businessMan.tellYourInfo();
+    }
+}
+
+class Man {
+    String name;
+
+    public Man(String name) {
+        this.name = name;
+    }
+
+    public void tellYourName() {
+        System.out.println("My name is " + name);
+    }
+}
+
+class BusinessMan extends Man {
+    String company;
+    String position;
+
+    public BusinessMan(String name, String company, String position) {
+        super(name); // 상위 클래스의 생성자 호출
+        this.company = company;
+        this.position = position;
+    }
+
+    public void tellYourInfo() {
+        System.out.println("My company is" + company);
+        System.out.println("My position is" + position);
+        tellYourName();
+    }
+}
+```
+
+#### • 단일 상속만을 지원하는 자바
+
+자바는 프로그램이 과도하게 복잡해지는 것을 막기 위해 단일 상속만을 지원한다. 이는 다음과 같이 하나의 클래스가 상속할 수 있는 클래스의 수가 최대 하나라는 것을 의미한다.
+
+```java
+class AAA {...}
+class ZZZ extends AAA {...}
+```
+
+그러나 다음과 같이 상속의 깊이를 더하는 것은 얼마든지 가능하다.
+
+```java
+class AAA {...}
+class MMM extends AAA {...}
+class ZZZ extends MMM {...}
+```
+
+#### • static 선언이 붙는 '클래스 변수'와 '클래스 메소드'의 상속
+
+앞서 공부한 클래스 변수와 클래스 메소드의 특징을 정리하면 다음과 같다.
+
+- 인스턴스의 생성과 상관이 없이 접근이 가능하다.
+- 클래스 내부와 외부에서(접근 수준 지사자가 허용하면) 접근이 가능하다.
+- 클래스 변수와 클래스 메소드가 위치한 클래스 내에서는 직접 접근이 가능하다.
+
+즉 클래스 변수와 클래스 메소드는 인스턴스에 속하지 않는, 딱 하나만 존재하는 변수와 메소드이다.
+
+따라서 상속의 대상이 아니다.
+
+```java
+class SuperCLS {
+	static int count = 0; // 클래스 변수
+	public SuperCLS() {
+		count++; // 클래스 내에서는 직접 접근이 가능
+	}
+}
+```
+
+### 07 Static variable(스태틱 변수)
+
+'인스턴스 변수'는 인스턴스가 생성되었을 때, 생성된 인스턴스 안에 존재하는 변수이다. 그러나 '클래스 변수'는 인스턴스의 생성과 상관없이 존재하는 변수이다.
+
+#### • 선언된 클래스의 모든 인스턴스가 공유하는 '클래스 변수(static 변수)'
+
+클래스 내에 선언된 변수 앞에 static 선언을 붙이면 이는 인스턴스 변수가 아닌 '클래스 변수'가 된다.
+
+이러한 클래스 변수의 특성을 파악하기 위해서 다음 예제를 관찰하자.
+
+다음과 같이 정의 및 선언시 기대할 수 있는 결과로 변수 instNum의 값은 모두 1이 호출되어야 한다.
+
+```java
+public class ClassVar {
+    public static void main(String[] args) {
+        InstCnt instCnt1 = new InstCnt();
+        InstCnt instCnt2 = new InstCnt();
+        InstCnt instCnt3 = new InstCnt();
+    }
+}
+
+class InstCnt {
+    static int instNum = 0; // 클래스 변수(static 변수)
+
+    InstCnt() { // 생성자
+        instNum++; // static으로 선언된 변수의 값 증가
+        System.out.println("인스턴스 생성 : " + instNum );
+    }
+}
+```
+
+그러나 기대한 결과와 다르게 instNum값은 공유라도 한듯 1씩 증가한 값이 되었다.
+
+<img src='images/스크린샷 2021-05-02 오후 10.10.28.png'>
+
+> static으로 선언된 변수는 변수가 선언된 클래스의 모든 인스턴스가 공유하는 변수이다.
+
+클래스 변수(static 변수)는 인스턴스 내에 존재하는 변수가 아니라 **'어떠한 인스턴스에도 속하지 않는 상태로 메모리 공간에 딱 하나만 존재하는 변수'이다.**
+
+다만 이 변수가 선언된 클래스의 인스턴스들은 이 변수에 바로 접근할 수 있는 권한이 있을 뿐이다.
+
+그리고 클래스 변수도 '접근 수준 지시자'의 규칙을 그대로 적용받기 때문에 public으로 선언되면 어디서든 접근이 가능하다. 물론 접근 방법에 있어서는 차이를 보인다.

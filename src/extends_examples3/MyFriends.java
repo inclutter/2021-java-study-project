@@ -1,4 +1,4 @@
-package extends_examples;
+package extends_examples3;
 
 /**
  * 앞서 상속을 하는 이유를 다음 한문장으로 소개할 수 있다.
