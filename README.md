@@ -6,6 +6,7 @@
 3. Access-level modifiers
 4. Constants
 5. Wildcard
+6. Extension
 
 
 
@@ -288,3 +289,10 @@ class Toy4 {
     }
 }
 ```
+
+### 06 Extension(상속)
+
+#### • 상속이란?
+
+연관된 일련의 클래스들에 대해 콩통적인 규약을 정의할 수있다.
+
