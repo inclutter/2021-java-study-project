@@ -7,7 +7,7 @@
 4. Constants
 5. Wildcard
 6. Extension
-7. Static variable
+7. Static variable(Java 책 223p 까지만 정리 추후 추가 정리 필요)
 
 
 
@@ -542,3 +542,48 @@ class InstCnt {
 
 > 앞서 설명에서 클래스 정보를 가상 머신이 읽는다는 표현을 썼는데, 이렇듯 가상머신이 특정 클래스 정보를 읽는 행위를 가리켜 클래스 로딩이라 한다. 그리고 특정 클래스의 인스턴스 생성을 위해서는 해당 클래스가 반드시 가상머신에 의해 로딩되어야 한다. 즉 인스턴스 생성보다 클래스 로딩이 먼저이다.
 
+• 클래스 변수를 언제 유용하게 활용할 것인가?
+
+앞서 제시했던 예제를 통해서도 클래스 변수가 유용하게 활용되는 상황 한 가지를 짐작할 수 있다.
+
+> 인스턴스 간에 데이터 공유가 필요한 상황에서 클래스 변수를 선언한다
+
+그럼 이어서 클래스 변수가 유용하게 사용되는 사례를 하나 더 보이겠다.
+
+이는 '클래스 내부와 외부에서 참조해야 할 정보'를 클래스 변수에 담은 예이다.
+
+아래 예제에서 PI가 상수로 선언이 된다. PI가 지닌 값은 '원주율'로 결코 변하지 않는 값이기 때문이다. 그런데 인스턴스 변수가 아닌 '클래스 변수'로 선언되었다.
+
+**이는 모든 Circle 인스턴스가 참조해야 하는 값이지만, 인스턴스가 각각 지녀야 하는 값은 아니기 때문이다.**
+
+```java
+package static_variable_examples;
+
+public class CircleConstPI {
+    public static void main(String[] args) {
+        Circle circle = new Circle(1.2);
+        circle.showPerimeter();
+        circle.showArea();
+    }
+}
+
+class Circle {
+    static final double PI = 3.1415; // 변하지 않는, 참조가 목적인 값  // 변수를 선언할 때 그 앞에 final이라는 선언을 추가하면 그 변수는 '상수'가 된다. 그리고 다음 두가지 특징을 지니게 된다.
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    void showPerimeter() {
+        double peri = (radius * 2) * PI;
+        System.out.println("둘레 : " + peri);
+    }
+
+    void showArea() {
+        double area = (radius * radius) * PI;
+        System.out.println("넓이 : " + area);
+    }
+
+}
+```
