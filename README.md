@@ -633,3 +633,20 @@ List<E> 인터페이스를 구현하는 컬렉션 클래스들이 갖는 공통�
 List<DataMap> dataMapList = new ArrayList<>(); // 다음과 같이 제네릭 클래스로 <E>에 자료형을 넣어서 해당 자료형 클래스 변수를 생성한다. List의 경우 여러 자료형이 올 수 있으므로 이렇게 제네릭 클래스로 만드는게 효율적이라고 볼 수 있겠다.(추후 제네릭 클래스를 만들 때 참고 필요)
 ```
 
+컬렉션 프레임워크의 저장, 참조, 삭제의 방법을 설명했는데, 실제로 컬렉션 프레임워크의 핵심은 이 세 가지이다. 그리고 예제에서 보였듯이 컬렉션 인스턴스를 사용하면 배열처럼 길이를 신경 쓰지 않아도 된다. ArrayList<E> 인스턴스는 내부적으로 배열을 생성해서 인스턴스를 저장하는데, 필요하면 그 배열의 길이를 스스로 늘리기 때문이다. 단 배열의 길이를 늘린다는 것은 더 긴 배열로의 교체를 의미한다. (한번 생성된 배열의 길이를 늘릴 수 없으므로) 따라서 성능에 신경을 써야 한다면 ArrayList<E>의 다음 생성자 정도는 알아 둘 필요가 있다.
+
+```java
+ // 인자로 전달된 수의 인스턴스를 저장할 수 있는 공간을 미리 확보
+public ArrayList(int initialCapacity) {
+    if (initialCapacity > 0) {
+        this.elementData = new Object[initialCapacity];
+    } else if (initialCapacity == 0) {
+        this.elementData = EMPTY_ELEMENTDATA;
+    } else {
+        throw new IllegalArgumentException("Illegal Capacity: "+
+                                           initialCapacity);
+    }
+}
+```
+
+저장해야 할 인스턴스의 수가 대략 계산이 된다면 위의 생성자를 통해서 적당한 길이의 배열을 미리 만들어 두는 것이 성능 향상에 도움이 된다.
