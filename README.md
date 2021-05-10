@@ -650,3 +650,85 @@ public ArrayList(int initialCapacity) {
 ```
 
 저장해야 할 인스턴스의 수가 대략 계산이 된다면 위의 생성자를 통해서 적당한 길이의 배열을 미리 만들어 두는 것이 성능 향상에 도움이 된다.
+
+#### • 저장된 인스턴스 순차적 접근 방법 2
+
+앞서 Collection<E>가 Iterable<T>를 상속한다고 하였다. 따라서 Collection<E>를 구현하는 자바의 제네릭 클래스는 Iterable<T>의 다음 추상 메소드를 모두 구현한다.
+
+> Iterator<T> iterator()
+
+이 메소드는 '반복자(Iterator)'라는 것을 반환한다. 반복자는 저장된 인스턴스들을 순차적으로 참조 할 때 사용하는 인스턴스로, 일종의 '지팡이'에 비유할 수 있다. 그리고 이 지팡이를 얻는 방법은 다음과 같다. (물론 이 지팡이의 역할은 저장된 인스턴스들을 가리키는 것이다.)
+
+```java
+public static void main(String[] args) {
+	List<String> list = new LinkedList<>();
+	∙∙∙∙
+	Iterator<String> itr = list.iterator(); // 반복자 획득, itr이 지팡이를 참조한다.
+}
+```
+
+위에서 얻은 지팡이를(반복자를) 통해 호출할 수 있는, Iterator<E> 메소드들은 다음과 같다.
+
+- E next() : 다음 인스턴스의 참조 값을 반환
+- boolean hasNext() : next 메소드 호출 시 참조 값 반환 가능 여부 확인
+- void remove() : next 메소드 호출을 통해 반환했던 인스턴스 삭제
+
+반복자는 next를 호출할 때마다 첫 번째 인스턴스를 시작으로 다음 인스턴스의 참조 값을 차례로 반환한다. 그리고 더 이상 반환할 대상이 없을 때 NoSuchElementException 예외를 발생시킨다. 따라서 저장된 인스턴스에 차례로 접근할 때에는 다음과 같은 반복문을 구성해야 한다.
+
+```java
+while(itr.hasNext()) { // next 메소드가 반환할 대상이 있다면,
+	str = itr.next() //next 메소드를 호출한다.
+}
+```
+
+hasNext는 반환할 대상이 있는지 미리 확인하는 메소드이다. 즉 이 메소드는 반환할 인스턴스가 있으면 true, 그렇지 않으면 false를 반환한다. 따라서 위와 같이 next 호출 이전에 hasNext를 호출하여 next 호출의 성공 가능성을 미리 확인해야 한다. **그리고 앞서 소개한 for-each문을 통한 순차적 접근과 달리 반복자를 이용하면 반복 중간에 특정 인스턴스를 삭제하는 것이 가능하다. (이는 for-each문을 통해서는 불가능한 일이다.) 그 예로 다음 코드를 실행하면, 저장된 문자열 중 "Box"를 모두 지울 수 있다.**
+
+```java
+while(itr.hasNext()) { // next 메소드가 반환할 대상이 있다면,
+	str = itr.next() //next 메소드를 호출한다.
+	if(str.equals("Box"))
+		itr.remove() // 위에서 next 메소드가 반환한 인스턴스 삭제
+}
+```
+
+이러한 반복자는 생성과 동시에 첫 번째 인스턴스를 가리키고, next가 호출될 때마다 가리키는 대상이 다음 인스턴스로 옮겨진다. 그렇다면 이 반복자를 원하는 때에 다시 첫 번째 인스턴스를 가리키게 하려면 어떻게 해야 할까? **가리키던 위치를 되돌리는 방법은 없으니 다음과 같이 반복자를 다시 얻어야 한다.**
+
+```java
+Iterator<String> itr = list.iterator()
+```
+
+그럼 다음 예제를 통해서 지금까지 설명한 내용을 정리해보겠다.
+
+```java
+public class IteratorCollection {
+    public static void main(String[] args) {
+        List<String> list = new LinkedList<>();
+        list.add("Toy");
+        list.add("Box");
+        list.add("Robot");
+        list.add("Box");
+
+        Iterator<String> iterator = list.iterator(); // 반복자 처음 획득
+
+        while(iterator.hasNext())
+            System.out.print(iterator.next() + '\t');
+        System.out.println();
+
+        iterator = list.listIterator(); // 반복자 다시 획득
+
+        String str;
+        while(iterator.hasNext()) {
+            str = iterator.next();
+            if(str.equals("Box"))
+                iterator.remove();
+        }
+
+        iterator = list.iterator(); // 반복자 다시 획득
+
+        while(iterator.hasNext())
+            System.out.print(iterator.next() + '\t');
+        System.out.println();
+    }
+}
+```
+
