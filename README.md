@@ -589,7 +589,7 @@ class Circle {
 
 ### 08 Collection framework(컬레션 프레임워크)
 
-#### • 프레임어크라는 표현의 이해
+#### • 프레임워크라는 표현의 이해
 
 프레임워크(Framework)라는 표현은 여러 분야에서 상이한 개념으로 사용되기 때문에, 이에 대한 정확한 이미 파악이 쉽지 않을 수 있다. 하지만 기본적으로 다음 의미를 공통적으로 지닌다.
 
@@ -650,36 +650,6 @@ public ArrayList(int initialCapacity) {
 ```
 
 저장해야 할 인스턴스의 수가 대략 계산이 된다면 위의 생성자를 통해서 적당한 길이의 배열을 미리 만들어 두는 것이 성능 향상에 도움이 된다.
-
-
-
-#### • 기본 자료형 데이터의 저장과 참조
-
-```java
-public class PrimitiveCollection {
-    public static void main(String[] args) {
-        LinkedList<Integer> integerLinkedList = new LinkedList<>();
-        integerLinkedList.add(10); integerLinkedList.add(20); integerLinkedList.add(30);
-
-        int n;
-        for (Iterator<Integer> itr = integerLinkedList.iterator(); itr.hasNext();) {
-            n = itr.next();
-            System.out.print(n + "\t");
-        }
-        System.out.println();
-
-    }
-}
-```
-
-#### • Set<E>을 구현하는 클래스의 특성과 HashSet<E> 클래스
-
-Set<E>  인터페이스를 구현하는 제네릭 클래스의 특성 두 가지를 정리하면 다음과 같다.
-
-- 저장 순서가 유지되지 않는다.
-- 데이터의 중복 저장을 허용하지 않는다.
-
-List<E>를 구현하는 컬렉션 인스턴스에 저장된 데이터를 반복자를 통해 출력해보면 저장된 순서대로 출력됨을 확인할 수 있다. 그리고 앞서 예제에서 "Box"를 두 번 저장하였는데, 두 번 모두 저장됨을 출력 결과에서 확인할 수 있었다. 하지만 Set<E>를 구현하는 클래스는 다르다. 순서도 유지되지 않고 중복도 허용하지 않는다. 그리고 이는 Set이라는 이름처럼 수학에서 말하는 '집합'의 특성이다. 그럼 이와 관련하여 다음 예제를 보자. 이 예제에서는 Set<E>를 구현하는 대표 클래스 HashSet<E>의 사용 예를 보여준다.
 
 #### • 저장된 인스턴스 순차적 접근 방법 2
 
@@ -770,4 +740,37 @@ List<String> list = Array.asList("Toy", "Robot", "Box"); // 인자로 전달된 
 ```
 
 그런데 이렇게 생성된 컬렉션 인스턴스는 새로운 인스턴스의 추가나 삭제가 불가능하다. 물론 반복자의 생성은 가능하나 이를 통해서도 참조만 가능할 뿐이다. 따라서 새로운 인스턴스의 추가나 삭제가 필요한 상황이라면 다음 생성자를 기반으로  ArrayList<E>를 생성해야 한다.
+
+#### • 기본 자료형 데이터의 저장과 참조
+
+컬렉션 인스턴스도 기본 자료형의 값은 저장하지 못한다. 그러나 래퍼 클래스의 도움으로 이들 값의 저장 및 참조가 가능하며, 이 과정에서 오토 박싱과 오토 언박싱으로 인해 자연스러운 코드의 구성이 가능하다.
+
+```java
+public class PrimitiveCollection {
+    public static void main(String[] args) {
+        LinkedList<Integer> integerLinkedList = new LinkedList<>();
+      	// 저장 과정에서 오토 박싱 진행
+        integerLinkedList.add(10); integerLinkedList.add(20); integerLinkedList.add(30);
+
+        int n;
+        for (Iterator<Integer> itr = integerLinkedList.iterator(); itr.hasNext();) {
+            n = itr.next(); // 오토 언박싱 진행
+            System.out.print(n + "\t");
+        }
+        System.out.println();
+
+    }
+}
+```
+
+#### • Set<E>을 구현하는 클래스의 특성과 HashSet<E> 클래스
+
+Set<E>  인터페이스를 구현하는 제네릭 클래스의 특성 두 가지를 정리하면 다음과 같다.
+
+- 저장 순서가 유지되지 않는다.
+- 데이터의 중복 저장을 허용하지 않는다.
+
+List<E>를 구현하는 컬렉션 인스턴스에 저장된 데이터를 반복자를 통해 출력해보면 저장된 순서대로 출력됨을 확인할 수 있다. 그리고 앞서 예제에서 "Box"를 두 번 저장하였는데, 두 번 모두 저장됨을 출력 결과에서 확인할 수 있었다. 하지만 Set<E>를 구현하는 클래스는 다르다. 순서도 유지되지 않고 중복도 허용하지 않는다. 그리고 이는 Set이라는 이름처럼 수학에서 말하는 '집합'의 특성이다. 그럼 이와 관련하여 다음 예제를 보자. 이 예제에서는 Set<E>를 구현하는 대표 클래스 HashSet<E>의 사용 예를 보여준다.
+
+#### 
 
