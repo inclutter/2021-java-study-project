@@ -650,3 +650,32 @@ public ArrayList(int initialCapacity) {
 ```
 
 저장해야 할 인스턴스의 수가 대략 계산이 된다면 위의 생성자를 통해서 적당한 길이의 배열을 미리 만들어 두는 것이 성능 향상에 도움이 된다.
+
+#### • 기본 자료형 데이터의 저장과 참조
+
+```java
+public class PrimitiveCollection {
+    public static void main(String[] args) {
+        LinkedList<Integer> integerLinkedList = new LinkedList<>();
+        integerLinkedList.add(10); integerLinkedList.add(20); integerLinkedList.add(30);
+
+        int n;
+        for (Iterator<Integer> itr = integerLinkedList.iterator(); itr.hasNext();) {
+            n = itr.next();
+            System.out.print(n + "\t");
+        }
+        System.out.println();
+
+    }
+}
+```
+
+#### • Set<E>을 구현하는 클래스의 특성과 HashSet<E> 클래스
+
+Set<E>  인터페이스를 구현하는 제네릭 클래스의 특성 두 가지를 정리하면 다음과 같다.
+
+- 저장 순서가 유지되지 않는다.
+- 데이터의 중복 저장을 허용하지 않는다.
+
+List<E>를 구현하는 컬렉션 인스턴스에 저장된 데이터를 반복자를 통해 출력해보면 저장된 순서대로 출력됨을 확인할 수 있다. 그리고 앞서 예제에서 "Box"를 두 번 저장하였는데, 두 번 모두 저장됨을 출력 결과에서 확인할 수 있었다. 하지만 Set<E>를 구현하는 클래스는 다르다. 순서도 유지되지 않고 중복도 허용하지 않는다. 그리고 이는 Set이라는 이름처럼 수학에서 말하는 '집합'의 특성이다. 그럼 이와 관련하여 다음 예제를 보자. 이 예제에서는 Set<E>를 구현하는 대표 클래스 HashSet<E>의 사용 예를 보여준다.
+
