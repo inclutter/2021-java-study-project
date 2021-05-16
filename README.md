@@ -9,6 +9,7 @@
 6. Extension
 7. Static variable(Java 책 223p 까지만 정리 추후 추가 정리 필요)
 8. Collection framework
+9. Exception Handling
 
 
 
@@ -864,8 +865,7 @@ class Num {
             return true;
         else
             return false;
-    }
-}
+
 ```
 
 #### • 두개의 참조 변수를 갖고 있을 경우 hashCode 사용
@@ -928,3 +928,267 @@ class Car {
     }
 }
 ```
+
+### 09 Exception Handling
+
+#### • 자바에서 말하는 예외
+
+프로그램 실행 중에 발생하는 '예외적인 상황'을 줄여서 '예외'라 한다. 즉 예외는 단순한 문법 오류가 아닌, 실행 중간에 발생하는 '정상적이지 않은 상황'을 뜻한다.
+
+```java
+package exception_handling;
+
+import java.util.Scanner;
+
+public class ExceptionCase {
+    public static void main(String[] args) {
+        Scanner kb = new Scanner(System.in);
+        System.out.println("a/b...a?");
+        int n1 = kb.nextInt();
+        System.out.println("a/b...b");
+        int n2 = kb.nextInt();
+        System.out.printf("%d / %d = %d \n", n1, n2, n1 / n2);
+        System.out.println("Good bye~~!");
+    }
+}
+```
+
+<img src='images/스크린샷 2021-05-15 오후 11.00.39.png'>
+
+위 예제 코드는 문법적으로 논리적으로 문제가 없다. 문제는 나누느 수가 0이 될 수 없음에도 부룩하고 0을 입력한 프로그램 사용자에게 있다. 그리고 이러한 상황을 가리켜 '예외'라 한다. 예외 발생 순간에 프로그램이 종료된 사실에 주목하자. 그리고 친절한 상황 설명은 아니지만 출려된 문장을 통해서 다음 사실 정도는 알 수 있다.
+
+"0으로 / 연산을 하여 java.lang.ArithmeticException 예외가 발생하였다."
+
+이는 가상머신이 예외 상황을 처리하는 방식이다. 즉 가상머신은 예외가 발생하면 그 내용을 간단히 출력하고 프로그램을 종료해버린다.
+
+그리고 위 예제는 실행 과정에서 다른 예외가 발생할 수도 있다. 이와 관련하여, 예제의 실행 중간에 숫자의 입력을 바라며 다음 내용을 출력하였다.
+
+**a/b...a?**
+
+따라서 숫자의 입력을 기대하고 다음과 같이 사용자의 입력을 읽어 들인다.
+
+**int n1 = kb.nextInt();**
+
+#### • try로 감싸야 할 영역의 결정
+
+```java
+try {
+	1. ...
+	2. 예외 발생 지점
+	3. ...
+} catch(Exception e) {
+	...
+}
+4. 예외 처리 이후 실행 지점
+```
+
+숫자 3의 위치에서 실행을 이어가는 것이 아니라, try ~ catch 문 전체를 건너뛰어 숫자 4의 위치에서 실행을 이어가게 되는데, 이러한 예외 처리 이후의 실행 특성은 관련이 있는 작업들을 하나로 묶는데 도움이 된다. 그럼 지금 설명한 내용을 고려하여 입력 오류에 대한 try ~ catch문을 다음 예제에 확실히 삽입해보자.
+
+```java
+package exception_handling;
+
+import java.util.Scanner;
+
+public class ExceptionCase {
+    public static void main(String[] args) {
+        Scanner kb = new Scanner(System.in);
+        System.out.println("a/b...a?");
+        int n1 = kb.nextInt(); // 입력 오류 발생 가능
+        System.out.println("a/b...b");
+        int n2 = kb.nextInt(); // 입력 오류 발생 가능
+        System.out.printf("%d / %d = %d \n", n1, n2, n1 / n2);
+        System.out.println("Good bye~~!");
+    }
+}
+```
+
+예제에서 입력 오류로 인한 InputMismatchException 예외가 발생할 수 있는 문장은 다음 둘이다.
+
+**int n1 = kb.nextInt();**
+
+**Int n2 = kb.nextInt();**
+
+따라서 이들 각각에 대해 try ~ catch문을 구성하는 것도 생각해 볼 수 있다. 그러나 변수 n1의 값이 적절히 들어오지 않는다면 변수 n2의 값을 입력받는 것도, / 연산을 진행하는 것도 의미가 없다. 즉 다음 문장들은 하나의 작업으로 볼 수 있다.
+
+```java
+// 아래 문장은 '하나의 작업'에서 제외 가능
+System.out.println("a/b...a?");
+int n1 = kb.nextInt(); // 입력 오류 발생 가능
+System.out.println("a/b...b");
+int n2 = kb.nextInt(); // 입력 오류 발생 가능
+System.out.printf("%d / %d = %d \n", n1, n2, n1 / n2);
+```
+
+```java
+package exception_handling;
+
+import java.util.Scanner;
+
+public class ExceptionCase {
+    public static void main(String[] args) {
+        Scanner kb = new Scanner(System.in);
+      	try{
+            System.out.println("a/b...a?");
+            int n1 = kb.nextInt(); // 입력 오류 발생 가능
+            System.out.println("a/b...b");
+            int n2 = kb.nextInt(); // 입력 오류 발생 가능
+            System.out.printf("%d / %d = %d \n", n1, n2, n1 / n2);
+        } catch (InputMismatchException e) {
+          e.getMessage();
+        }
+        System.out.println("Good bye~~!");
+    }
+}
+```
+
+#### • 둘 이상의 예외를 처리하기 위한 구성
+
+앞서 제시한 나눗셈 관련 예제에서는 다음 두 가지의 예외의 발생 가능성이 있다.
+
+**Java.lang.ArithmeticException**
+
+**Java.lang.InputMismatchException**
+
+따라서 이 둘에 대해서 모두 예외 처리를 하고자 한다면, 다음에서 보이는 바와 같이 catch 구문 둘을 이어서 구성하면 된다.
+
+```java
+package exception_handling;
+
+import java.util.Scanner;
+
+public class ExceptionCase {
+    public static void main(String[] args) {
+        Scanner kb = new Scanner(System.in);
+      	try{
+            System.out.println("a/b...a?");
+            int n1 = kb.nextInt(); // 입력 오류 발생 가능
+            System.out.println("a/b...b");
+            int n2 = kb.nextInt(); // 입력 오류 발생 가능
+            System.out.printf("%d / %d = %d \n", n1, n2, n1 / n2);
+        } catch (InputMismatchException e) {
+          e.getMessage();
+        } catch (ArithmeticException e) {
+          e.getMessage();
+        }
+        System.out.println("Good bye~~!");
+    }
+}
+예제에서 보이듯이 catch 구문을 얼마든지 이어서 구성할 수 있다. 그런데 자바 7 부터는 다음과 같이 하나의 catch 구문 안에서 둘 이상의 예외를 처리하는 것도 가능하다.
+```
+
+```java
+package exception_handling;
+
+import java.util.Scanner;
+
+public class ExceptionCase {
+    public static void main(String[] args) {
+        Scanner kb = new Scanner(System.in);
+      	try{
+            System.out.println("a/b...a?");
+            int n1 = kb.nextInt(); // 입력 오류 발생 가능
+            System.out.println("a/b...b");
+            int n2 = kb.nextInt(); // 입력 오류 발생 가능
+            System.out.printf("%d / %d = %d \n", n1, n2, n1 / n2);
+        } catch (AlithmeticException | InputMismatchException e) {
+          e.getMessage();
+        }
+        System.out.println("Good bye~~!");
+    }
+}
+```
+
+따라서 상황 별 예외의 처리 방식이 다르지 않을 경우, 위와 같이 하나의 catch 구문 안에서 모든 예외가 처리될 수 있도록 묶는 것도 유용한 선택이 될 수 있다.
+
+#### • Throwable 클래스와 예외처리의 책임 전가
+
+자바의 최상위 클래스인 java.lang.Object를 제외하고 예외 클래스의 최상위 클래스는 다음과 같다.
+
+**java.lang.Throwable** 예외 클래스의 최상위 클래스
+
+그리고 이 클래스에는 발생한 예외의 정보를 알 수 있는 메소드가 정의되어 있는데, 대표적인 메소드 둘은 다음과 같다.
+
+**public String getMessage()**
+
+​	→ 예외의 원인을 담고 있는 문자열을 반환
+
+**public String printStackTrace()**
+
+​	→ 예외가 발생한 위치와 호출된 메소드의 정보를 출력
+
+```java
+package exception_handling;
+
+public class ExceptionMessage {
+    public static void md1(int n) {
+        md2(n, 0); // 아래의 메소드 호출
+    }
+
+    public static void md2(int n1, int n2) {
+        int r = n1 / n2; // 예외 발생 지점
+    }
+
+    public static void main(String[] args) {
+        md1(3);
+        System.out.println("Good bye~~!");
+    }
+}
+```
+
+<img src='images/스크린샷 2021-05-15 오후 11.31.59.png'>
+
+위 예제의 메소드 호출 흐름은 다음과 같다.
+
+main → md1 → md2
+
+그리고 예외는 md2에서 발생하였다. 그런데 md2에서 해당 에외를 처리하지 않았다. 이러한 경우 가상머신은 md2를 호출한 md1에게 예외처리의 책임을 넘긴다.(예외처리의 책임이 넘어가면 예외철의 책임을 넘긴 메소드의 호출은 종료가 된다.) 이렇듯 예외는 처리되지 않으면 그 책임이 넘어간다. 그리고 그 끝은 main이다. 그리고 main 조차 예외처리를 하지 않으면 가상 머신이 대신 예외를 처리한다. 물론 그 방법은 앞서 수차례 보았듯이 예외 관련 메시지의 출력과 프로그램의 종료이다. 그럼 실행 결과에서 보이는 내용의 의미를 정리해보겠다.
+
+```java
+Connected to the target VM, address: '127.0.0.1:54403', transport: 'socket'
+		// :0으로 / 연산을 하여 ArithmeticException 발생하였다.
+  Exception in thread "main" java.lang.ArithmeticException: / by zero
+    // :ExceptionMessage 클래스의 md2에서 예외가 시작되었고
+	at exception_handling.ExceptionMessage.md2(ExceptionMessage.java:9)
+    // :ExceptionMessage 클래스의 md1으로 예외가 넘어갔으며
+	at exception_handling.ExceptionMessage.md1(ExceptionMessage.java:5)
+    // :ExceptionMessage 클래스의 main으로까지 예외가 넘어갔다. 
+	at exception_handling.ExceptionMessage.main(ExceptionMessage.java:13)
+Disconnected from the target VM, address: '127.0.0.1:54403', transport: 'socket'
+
+Process finished with exit code 1
+```
+
+#### • Exception을 상속하는 예외 클래스의 예외처리
+
+```java
+package exception_handling;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class IOExceptionCase {
+    public static void main(String[] args) {
+        Path file = Paths.get("/java-test/Simple.txt");
+        BufferedWriter writer = null;
+
+        try {
+            writer = Files.newBufferedWriter(file); // IOException 발생 가능
+            writer.write('A'); // IOException 발생 가능
+            writer.write('Z'); // IOException 발생 가능
+
+            if(writer != null)
+                writer.close(); // IOException 발생 가능
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+위 예제는 다음 경로의 파일을 생성해서, 그 안에 두 개의 문자를 저장하고 끝을 맺는 예제이다.
+
+단, 파일은 자동으로 생성되지만 경로는 자동으로 생성되지 않기 때문에 /java-test 라는 디렉토리가 존재하는 상태에서 위 예제를 실행해야 한다. 그러면 파일이 생성되고 이 파일이 열려서 문자가 저장이 된다.
