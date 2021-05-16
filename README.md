@@ -759,6 +759,48 @@ public class PrimitiveCollection {
         }
         System.out.println();
 
+=======
+#### • HashSet<E>이 판단하는 동일 인스턴스의 기준
+
+- public boolean equals(Object obj)
+- public int hashCode()
+
+​```java
+package collection_framework;
+
+import java.util.HashSet;
+
+/**
+ * HashSet<E>이 판단하는 동일 인스턴스의 기준은, Object 클래스에 정의되어 있는 다음 두 메소드의 호출 결과를 근거로 하기 떄문
+ * 
+ */
+public class HashSetEqualityOne {
+    public static void main(String[] args) {
+        HashSet<Num1> set = new HashSet<>();
+        set.add(new Num1(7799)); // 다른 인스턴스
+        set.add(new Num1(9955)); // 다른 인스턴스
+        set.add(new Num1(7799)); // 다른 인스턴스
+
+        System.out.println("인스턴스 수 : " + set.size());
+
+        for (Num1 n : set) {
+            System.out.print(n.toString() + '\t');
+        }
+        System.out.println();
+    }
+}
+
+class Num1 {
+    private int num;
+
+    public Num1(int num) {
+        this.num = num;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(num);
+>>>>>>> collection-framework
     }
 }
 ```
@@ -772,5 +814,117 @@ Set<E>  인터페이스를 구현하는 제네릭 클래스의 특성 두 가지
 
 List<E>를 구현하는 컬렉션 인스턴스에 저장된 데이터를 반복자를 통해 출력해보면 저장된 순서대로 출력됨을 확인할 수 있다. 그리고 앞서 예제에서 "Box"를 두 번 저장하였는데, 두 번 모두 저장됨을 출력 결과에서 확인할 수 있었다. 하지만 Set<E>를 구현하는 클래스는 다르다. 순서도 유지되지 않고 중복도 허용하지 않는다. 그리고 이는 Set이라는 이름처럼 수학에서 말하는 '집합'의 특성이다. 그럼 이와 관련하여 다음 예제를 보자. 이 예제에서는 Set<E>를 구현하는 대표 클래스 HashSet<E>의 사용 예를 보여준다.
 
-#### 
+```java
+package collection_framework;
 
+import java.util.HashSet;
+
+public class HashSetEqualityTwo {
+    public static void main(String[] args) {
+        HashSet<Num> set = new HashSet<>();
+        set.add(new Num(7799));
+        set.add(new Num(9955));
+        set.add(new Num(7799));
+
+        System.out.println("인스턴스 수 : " + set.size());
+
+        for (Num n:set) {
+            System.out.printf(n.toString() + '\t');
+        }
+        System.out.println();
+    }
+}
+
+class Num {
+    private int num;
+
+    public Num(int num) {
+        this.num = num;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(num);
+    }
+
+    @Override
+    public int hashCode() {
+        return num % 3;
+    }
+
+    /**
+     * 다음과 같이 Overriding 하면 object의 값을 비교하는게 아니가 해당 int값을 비교하여 동일 여부를 판단한다.
+     * 
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if(num == ((Num)obj).num)
+            return true;
+        else
+            return false;
+    }
+}
+```
+
+#### • 두개의 참조 변수를 갖고 있을 경우 hashCode 사용
+
+```java
+package collection_framework;
+
+import java.util.HashSet;
+
+public class HowHashCode {
+    public static void main(String[] args) {
+        HashSet<Car> set = new HashSet<>();
+        set.add(new Car("HY_MD_301", "RED"));
+        set.add(new Car("HY_MD_301", "BLACK"));
+        set.add(new Car("HY_MD_302", "RED"));
+        set.add(new Car("HY_MD_302", "WHITE"));
+        set.add(new Car("HY_MD_301", "BLACK")); // 중복 data 저장 안함
+        System.out.println("인스턴스 수 : " + set.size());
+
+        for (Car car: set) {
+            System.out.println(car.toString() + '\t');
+        }
+    }
+}
+
+class Car {
+    private String model;
+    private String color;
+
+    public Car(String model, String color) {
+        this.model = model;
+        this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return model + " : " + color;
+    }
+
+    /**
+     * 다음과 같이 대체할 수 있다.
+     * public int hashCode() {
+     *     return Objects.hash(model, color);
+     * }
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        return (model.hashCode() + color.hashCode()) / 2;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        String m = ((Car)obj).model;
+        String c = ((Car)obj).color;
+        if(model.equals(m) && color.equals(c))
+            return true;
+        else
+            return false;
+    }
+}
+```
