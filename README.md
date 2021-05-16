@@ -732,7 +732,7 @@ public class IteratorCollection {
 }
 ```
 
-• 배열 보다는 컬렉션 인스턴스가 좋다 : 컬렉션 번환
+#### • 배열 보다는 컬렉션 인스턴스가 좋다 : 컬렉션 번환
 
 배열과 ArrayLIst<E>는 특성이 유사하다. (ArrayList<E>가 배열을 기반으로 인스턴스를 저장하므로) 그런데 대부분의 경우 배열보다 ArrayList<E>가 좋다. 첫 번째 이유로 인스턴스의 저장과 삭제가 편하다. 그리고 두 번째 이유로 '반복자'를 쓸 수 있다. 단 배열처럼 '선언과 동시에 초기화'를 할 수 없어서 초기에 무엇인가를 채워 넣는 일이 조금 번거롭다. 하지만 다음과 같이 컬렉션 인스턴스를 생성할 수 있어서 이것도 문제가 되지 않는다.
 
@@ -741,3 +741,163 @@ List<String> list = Array.asList("Toy", "Robot", "Box"); // 인자로 전달된 
 ```
 
 그런데 이렇게 생성된 컬렉션 인스턴스는 새로운 인스턴스의 추가나 삭제가 불가능하다. 물론 반복자의 생성은 가능하나 이를 통해서도 참조만 가능할 뿐이다. 따라서 새로운 인스턴스의 추가나 삭제가 필요한 상황이라면 다음 생성자를 기반으로  ArrayList<E>를 생성해야 한다.
+
+#### • HashSet<E>이 판단하는 동일 인스턴스의 기준
+
+- public boolean equals(Object obj)
+- public int hashCode()
+
+```java
+package collection_framework;
+
+import java.util.HashSet;
+
+/**
+ * HashSet<E>이 판단하는 동일 인스턴스의 기준은, Object 클래스에 정의되어 있는 다음 두 메소드의 호출 결과를 근거로 하기 떄문
+ * 
+ */
+public class HashSetEqualityOne {
+    public static void main(String[] args) {
+        HashSet<Num1> set = new HashSet<>();
+        set.add(new Num1(7799)); // 다른 인스턴스
+        set.add(new Num1(9955)); // 다른 인스턴스
+        set.add(new Num1(7799)); // 다른 인스턴스
+
+        System.out.println("인스턴스 수 : " + set.size());
+
+        for (Num1 n : set) {
+            System.out.print(n.toString() + '\t');
+        }
+        System.out.println();
+    }
+}
+
+class Num1 {
+    private int num;
+
+    public Num1(int num) {
+        this.num = num;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(num);
+    }
+}
+```
+
+```java
+package collection_framework;
+
+import java.util.HashSet;
+
+public class HashSetEqualityTwo {
+    public static void main(String[] args) {
+        HashSet<Num> set = new HashSet<>();
+        set.add(new Num(7799));
+        set.add(new Num(9955));
+        set.add(new Num(7799));
+
+        System.out.println("인스턴스 수 : " + set.size());
+
+        for (Num n:set) {
+            System.out.printf(n.toString() + '\t');
+        }
+        System.out.println();
+    }
+}
+
+class Num {
+    private int num;
+
+    public Num(int num) {
+        this.num = num;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(num);
+    }
+
+    @Override
+    public int hashCode() {
+        return num % 3;
+    }
+
+    /**
+     * 다음과 같이 Overriding 하면 object의 값을 비교하는게 아니가 해당 int값을 비교하여 동일 여부를 판단한다.
+     * 
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if(num == ((Num)obj).num)
+            return true;
+        else
+            return false;
+    }
+}
+```
+
+#### • 두개의 참조 변수를 갖고 있을 경우 hashCode 사용
+
+```java
+package collection_framework;
+
+import java.util.HashSet;
+
+public class HowHashCode {
+    public static void main(String[] args) {
+        HashSet<Car> set = new HashSet<>();
+        set.add(new Car("HY_MD_301", "RED"));
+        set.add(new Car("HY_MD_301", "BLACK"));
+        set.add(new Car("HY_MD_302", "RED"));
+        set.add(new Car("HY_MD_302", "WHITE"));
+        set.add(new Car("HY_MD_301", "BLACK")); // 중복 data 저장 안함
+        System.out.println("인스턴스 수 : " + set.size());
+
+        for (Car car: set) {
+            System.out.println(car.toString() + '\t');
+        }
+    }
+}
+
+class Car {
+    private String model;
+    private String color;
+
+    public Car(String model, String color) {
+        this.model = model;
+        this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return model + " : " + color;
+    }
+
+    /**
+     * 다음과 같이 대체할 수 있다.
+     * public int hashCode() {
+     *     return Objects.hash(model, color);
+     * }
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        return (model.hashCode() + color.hashCode()) / 2;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        String m = ((Car)obj).model;
+        String c = ((Car)obj).color;
+        if(model.equals(m) && color.equals(c))
+            return true;
+        else
+            return false;
+    }
+}
+```
+
