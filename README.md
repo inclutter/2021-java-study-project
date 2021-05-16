@@ -1003,3 +1003,37 @@ Disconnected from the target VM, address: '127.0.0.1:54403', transport: 'socket'
 Process finished with exit code 1
 ```
 
+#### • Exception을 상속하는 예외 클래스의 예외처리
+
+```java
+package exception_handling;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class IOExceptionCase {
+    public static void main(String[] args) {
+        Path file = Paths.get("/java-test/Simple.txt");
+        BufferedWriter writer = null;
+
+        try {
+            writer = Files.newBufferedWriter(file); // IOException 발생 가능
+            writer.write('A'); // IOException 발생 가능
+            writer.write('Z'); // IOException 발생 가능
+
+            if(writer != null)
+                writer.close(); // IOException 발생 가능
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+위 예제는 다음 경로의 파일을 생성해서, 그 안에 두 개의 문자를 저장하고 끝을 맺는 예제이다.
+
+단, 파일은 자동으로 생성되지만 경로는 자동으로 생성되지 않기 때문에 /java-test 라는 디렉토리가 존재하는 상태에서 위 예제를 실행해야 한다. 그러면 파일이 생성되고 이 파일이 열려서 문자가 저장이 된다.
