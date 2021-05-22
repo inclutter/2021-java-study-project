@@ -5,9 +5,10 @@ import java.util.HashSet;
 public class HashSetEqualityTwo {
     public static void main(String[] args) {
         HashSet<Num> set = new HashSet<>();
-        set.add(new Num(7799));
-        set.add(new Num(9955));
-        set.add(new Num(7799));
+        set.add(new Num(7799)); // hashCode() 함수 실행
+        set.add(new Num(7799)); // hashCode() 함수 실행 equals(Object obj) 함수 실행해서 동일 값인지 확인 -> 동일 값이면 저장 안함
+        set.add(new Num(9955)); // hashCode() 함수 실행
+        set.add(new Num(7799)); // hashCode() 함수 실행 equals(Object obj) 함수 실행해서 동일 값인지 확인 -> 동일 값이면 저장 안함
 
         System.out.println("인스턴스 수 : " + set.size());
 
